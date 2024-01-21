@@ -6,6 +6,7 @@ from navbar import Navbar
 import pandas as pd
 ca=pd.read_stata('data/2018_Camara.dta')
 
+
 nav = Navbar()
 
 body = dbc.Container([ 
@@ -34,7 +35,28 @@ body = dbc.Container([
             value=ca.ano.unique()[0],
             multi=False
         ),
-        ],md=6),
+        ],md=2),
+
+        dbc.Col([
+        html.H1(r"Departamento"),
+        html.Br(),
+        dcc.Dropdown(id='camext_depto',
+            options=[{'label': i, 'value': i} for i in ca.ano.unique()],
+            value=ca.ano.unique()[0],
+            multi=False
+        ),
+        ],md=3),
+
+        dbc.Col([
+        html.H1(r"Muncipio"),
+        html.Br(),
+        dcc.Dropdown(id='camext_mncpo',
+            options=[{'label': i, 'value': i} for i in ca.ano.unique()],
+            value=ca.ano.unique()[0],
+            multi=False
+        ),
+        ],md=3),
+
 
         dbc.Col([
         html.Br(),
@@ -55,6 +77,7 @@ def CAMARAEXT():
     return layout
 
 app = dash.Dash(__name__)
+dash.register_page(__name__)
 
 app.layout=CAMARAEXT()
 if __name__ == '__main__':

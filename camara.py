@@ -24,6 +24,7 @@ def CAMARA():
     return layout
 
 app = dash.Dash(__name__)
+dash.register_page(__name__)
 
 app.layout=CAMARA()
 if __name__ == '__main__':

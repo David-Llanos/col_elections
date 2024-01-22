@@ -4,7 +4,7 @@ from dash import dcc
 import dash_bootstrap_components as dbc 
 from navbar import Navbar
 import pandas as pd
-from listas import partidos
+from listas import partidos, paises
 elecciones=['CmaraIndgena', 'CmaraNegritudes', 'CmaraTerritorial']
 anios=[2010,2014,2018,2022]
 
@@ -16,7 +16,7 @@ body = dbc.Container([
     html.Br(),
     dbc.Row([
         dbc.Col([
-        html.H3(r"Seleccione Anio"),
+        html.H3(r"Anio"),
         html.Br(),
         dcc.Dropdown(id='camext_anio',
             options=[{'label': i, 'value': i} for i in anios],
@@ -34,7 +34,7 @@ body = dbc.Container([
             value=elecciones[0:3],
             multi=True
         ),
-        ],width=4),
+        ],width=2),
 
         dbc.Col([
         html.H3(r"Partido"),
@@ -47,17 +47,36 @@ body = dbc.Container([
             clearable=False,
             persistence=True,
             persistence_type='local',
-            style={'width':'200%'},
+            style={'width':'100%'},
             )
         
-        ],width=2),
+        ],width=8),
+
+        # dbc.Col([
+        # html.H3(r"Pais"),
+        # html.Br(),
+        # dcc.Dropdown(id='camext_pais',
+        #     options=[{'label': i, 'value': i} for i in paises],
+        #     value=paises,
+        #     multi=True,
+        #     searchable=True,
+        #     clearable=False,
+        #     persistence=True,
+        #     persistence_type='local',
+        #     style={'width':'100%'},
+        #     )
+        
+        # ],width=6),
+
         dbc.Col([
-        html.Br(),
-        html.Br(),
-        dcc.Graph('grafica_votos_camara_ext'),
-        html.Br(),
-        html.Div(id='tabla_camara_ext'),
-        ],md=12)
+            html.Br(),
+            html.Br(),
+            dcc.Graph('grafica_votos_camara_ext'),
+            html.Br(),
+            dcc.Graph('grafica_votos_camara_ext_pais'),
+            html.Br(),
+            html.Div(id='tabla_camara_ext'),
+        ],width=12)
     ])
 
 ])

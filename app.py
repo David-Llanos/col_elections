@@ -23,7 +23,8 @@ import pandas as pd
 cax=pd.read_csv('agregados/cax_eleccion_partido.cvs')
 cax=cax.sort_values(by=['anio'])
 
-
+caxp=pd.read_csv('agregados/cax_eleccion_partido_pais.cvs')
+caxp=caxp.sort_values(by=['anio','partido'])
 
 
 
@@ -63,7 +64,7 @@ def render_content(pathname):
     Input('camext_partido', 'value'),
     Input('camext_anio', 'value')
    )
-def mostrar_tabla_camara_2018(ele,par, anio):
+def mostrar_data_camara_exterior(ele,par, anio):
 
     cax2=cax.loc[(cax.eleccion.isin (ele)) & (cax.partido.isin (par)) & (cax.anio.isin (anio))]
     
@@ -86,6 +87,43 @@ def mostrar_tabla_camara_2018(ele,par, anio):
                             page_size=10
                             )
     return [camara_ext_table, fig]
+
+
+@app.callback(
+    Output('grafica_votos_camara_ext_pais', 'figure'),
+    Input('camext_eleccion', 'value'),
+    Input('camext_partido', 'value'),
+    Input('camext_anio', 'value'),
+    Input('grafica_votos_camara_ext', 'clickData')
+   )
+def mostrar_grafica_con_click(ele,par, anio, click):
+
+    if click is None:
+        raise PreventUpdate
+    else:
+        x=click['points'][0]['x']
+        y=click['points'][0]['y']
+        print("XX:", x,"YY: ",y, click)
+        caxp2=caxp.loc[(caxp.eleccion.isin (ele)) & (caxp.partido.isin (par)) & 
+                    (caxp.anio == int(x))]
+        
+        print("paises", caxp2.head())
+        fig = px.bar(caxp2, x='pais', y='votos', color='partido', 
+                #   title="Total votos globales por anio, circunscripcion y partido"
+                    title=f"X: {x}"
+
+                )
+        fig.update_layout(legend=dict(
+        yanchor="top",
+        y=1.4,
+        xanchor="left",
+        x=0.5
+    ))
+
+    
+    return fig
+
+
 
 
 if __name__ == '__main__':

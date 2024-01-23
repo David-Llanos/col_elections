@@ -26,6 +26,8 @@ cax=cax.sort_values(by=['anio'])
 caxp=pd.read_csv('agregados/cax_eleccion_partido_pais.cvs')
 caxp=caxp.sort_values(by=['anio','partido'])
 
+caxpp=pd.read_csv('agregados/cax_eleccion_partido_pais_puesto.cvs')
+caxpp=caxpp.sort_values(by=['anio','partido','puesto'])
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -103,14 +105,11 @@ def mostrar_grafica_con_click(ele,par, anio, click):
     else:
         x=click['points'][0]['x']
         y=click['points'][0]['y']
-        print("XX:", x,"YY: ",y, click)
         caxp2=caxp.loc[(caxp.eleccion.isin (ele)) & (caxp.partido.isin (par)) & 
                     (caxp.anio == int(x))]
         
-        print("paises", caxp2.head())
         fig = px.bar(caxp2, x='pais', y='votos', color='partido', 
-                #   title="Total votos globales por anio, circunscripcion y partido"
-                    title=f"X: {x}"
+                    title=f"Anio seleccionado: {x}"
 
                 )
         fig.update_layout(legend=dict(
@@ -119,7 +118,39 @@ def mostrar_grafica_con_click(ele,par, anio, click):
         xanchor="left",
         x=0.5
     ))
+    
+    return fig
 
+@app.callback(
+    Output('grafica_votos_camara_ext_pais_puesto', 'figure'),
+    Input('camext_eleccion', 'value'),
+    Input('camext_partido', 'value'),
+    Input('camext_anio', 'value'),
+    Input('grafica_votos_camara_ext', 'clickData'),
+    Input('grafica_votos_camara_ext_pais', 'clickData'),
+
+   )
+def mostrar_grafica_con_segundo_click(ele,par, anio, click1, click2):
+
+    if click1 is None or click2 is None :
+        raise PreventUpdate
+    else:
+        click_anio=click1['points'][0]['x']
+        click_pais=click2['points'][0]['x']
+        
+        caxpp2=caxpp.loc[(caxpp.eleccion.isin (ele)) & (caxpp.partido.isin (par)) & 
+                    (caxp.anio == int(click_anio))  & (caxpp.pais==click_pais) ]
+        
+        fig = px.bar(caxpp2, x='puesto', y='votos', color='partido', 
+                    title=f"Anio: {click_anio}, Pais: {click_pais}"
+
+                )
+        fig.update_layout(legend=dict(
+        yanchor="top",
+        y=1.4,
+        xanchor="left",
+        x=0.5
+    ))
     
     return fig
 

@@ -75,6 +75,8 @@ body = dbc.Container([
             html.Br(),
             dcc.Graph('grafica_votos_camara_ext_pais'),
             html.Br(),
+            dcc.Graph('grafica_votos_camara_ext_pais_puesto'),
+            html.Br(),
             html.Div(id='tabla_camara_ext'),
         ],width=12)
     ])

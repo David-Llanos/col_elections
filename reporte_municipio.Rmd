@@ -1,0 +1,73 @@
+---
+title: "DC-Ideas: Municipio"
+author: "JD Lazala"
+date: "2024-01-23"
+output: html_document
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(data.table)
+library(plotly)
+library(DT)
+dt=fread('/home/david/juancho/col_elections/agregados/presidente_por_anio_eleccion_partido_candidato_depto_mun.csv')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+dt2=dt[nomdepto=='META' ]
+dt3=dt2[partido=='VOTOSBLANCOS' | partido=='VOTOSENBLANCO' ]
+ag=dt2[,.(votos=sum(votos)) ,by=c('anio','nomdepto','nommun','partido')]
+keycol <-c("anio","nommun")
+setorderv(ag, keycol)
+# ag2[,total_mun:=sum(votos), by=nommun]
+# ag2[,per_blanco:=round(votos), by=nommun]
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+t <- list(
+  family = "Courier New",
+  size = 8,
+  color = "blue")
+t1 <- list(
+  family = "Times New Roman",
+  color = "red"
+)
+t2 <- list(
+  family = "Courier New",
+  size = 14,
+  color = "green")
+t3 <- list(family = 'Arial')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.width=18}
+fig <- plot_ly(ag,
+    x = ~anio, 
+    y = ~nommun,
+    z = ~votos, 
+    type = "heatmap",
+    colors = colorRamp(c("darkblue", "purple", "darkred")) 
+)%>%
+  layout(title = 'Votos en Blanco por anio y Municipio',
+         yaxis = list(title = list(text =''),
+                      tickfont=list(size=7)
+                      ),
+         plot_bgcolor = "white")
+fig
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+datatable(ag, caption='Votos en Blanco', filter='top')
+```
+

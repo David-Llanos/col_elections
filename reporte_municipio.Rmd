@@ -28,7 +28,7 @@ dt=fread('/home/david/juancho/col_elections/agregados/presidente_por_anio_elecci
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 dt2=dt[nomdepto=='META' ]
 dt3=dt2[partido=='VOTOSBLANCOS' | partido=='VOTOSENBLANCO' ]
-ag=dt2[,.(votos=sum(votos)) ,by=c('anio','nomdepto','nommun','partido')]
+ag=dt3[,.(votos=sum(votos)) ,by=c('anio','nomdepto','nommun','partido')]
 keycol <-c("anio","nommun")
 setorderv(ag, keycol)
 # ag2[,total_mun:=sum(votos), by=nommun]
